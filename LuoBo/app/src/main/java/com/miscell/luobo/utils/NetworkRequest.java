@@ -11,11 +11,14 @@ import okhttp3.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jishichen on 2017/4/26.
@@ -35,6 +38,25 @@ public class NetworkRequest {
 
     public static NetworkRequest getInstance() {
         return INSTANCE;
+    }
+
+    public void getBytes(String url,
+                         final Listener<byte[]> listener,
+                         final ErrorListener errorListener) {
+        Request.Builder request = new Request.Builder()
+                .url(url);
+
+        mHttpClient.newCall(request.build()).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                onError(errorListener);
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                listener.onResponse(response.body().bytes());
+            }
+        });
     }
 
     public <T> void getFeedList(String url,
@@ -134,6 +156,26 @@ public class NetworkRequest {
                 final Article article = new Article();
                 if (null != contents && contents.size() > 0) {
                     article.content = contents.get(0).html();
+                }
+
+                Elements images = doc.select("article.article-content img");
+                if (null != images && images.size() > 0) {
+                    article.imageList = new ArrayList<>();
+                    article.infos = new HashMap<>();
+
+                    for (Element img : images) {
+                        String url = img.attr("src");
+                        if (null != img.parent()) {
+                            Element title = img.parent().previousElementSibling();
+                            if (null != title && title.tagName().equals("p")) {
+                                String text = title.text();
+                                if (!TextUtils.isEmpty(text)) {
+                                    article.infos.put(url, text);
+                                }
+                            }
+                        }
+                        article.imageList.add(url);
+                    }
                 }
 
                 mHandler.post(new Runnable() {

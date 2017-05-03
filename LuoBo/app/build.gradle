@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+def gitVersion() {
+    def cmd = 'git rev-list HEAD --count'
+    cmd.execute([], project.rootDir).text.trim().toInteger()
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -7,14 +12,29 @@ android {
         applicationId "com.miscell.luobo"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 1
+        versionCode gitVersion()
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        release {
+            storeFile file("../chenjishi.keystore")
+            storePassword "331500311113Ctrl"
+            keyAlias "chenjishi_key"
+            keyPassword "331500311113Ctrl"
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+//            applicationVariants.all {variant ->
+//                variant.outputs.each {output ->
+//                    def timestamp = new Date().format('yyyyMMddHHmmss')
+//                    output.outputFile = new File(output.outputFile.parent, "luobo-" + gitVersion() + "-" + timestamp + ".apk")
+//                }
+//            }
         }
     }
 }
@@ -33,4 +53,7 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.flurry.android:analytics:7.0.0@aar'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+    compile 'com.sina.weibo.sdk:core:2.0.3:openDefaultRelease@aar'
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+    <TextView
+            android:id="@+id/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/image_loading"
+            android:textColor="#666"
+            android:textSize="15sp"
+            android:layout_gravity="center"/>
+    <com.miscell.luobo.article.GifMovieView
+            android:id="@+id/gif_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+    <com.miscell.luobo.article.TouchImageView
+            android:id="@+id/img_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitStart"/>
+    <TextView
+            android:id="@+id/title_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingTop="12dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="12dp"
+            android:lineSpacingExtra="4dp"
+            android:visibility="gone"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:background="#22000000"/>
+</FrameLayout>

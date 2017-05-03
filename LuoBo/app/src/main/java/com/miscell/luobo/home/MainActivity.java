@@ -1,7 +1,10 @@
 package com.miscell.luobo.home;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +20,8 @@ import com.miscell.luobo.utils.NetworkRequest;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements Listener<FeedDoc>, ErrorListener,
-OnPageEndListener, SwipeRefreshLayout.OnRefreshListener {
+        OnPageEndListener, SwipeRefreshLayout.OnRefreshListener {
+    private static final int REQUEST_PERMISSION = 233;
 
     private FeedListAdapter mListAdapter;
 
@@ -30,6 +34,7 @@ OnPageEndListener, SwipeRefreshLayout.OnRefreshListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkPermission();
         setContentView(R.layout.activity_main);
 
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
@@ -110,5 +115,23 @@ OnPageEndListener, SwipeRefreshLayout.OnRefreshListener {
         if (mPage > 1) mListAdapter.hideLoading();
         mScrollListener.setIsLoading(false);
         mRefreshLayout.setRefreshing(false);
+    }
+
+    private void checkPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+
+        String[] permissions = new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE};
+
+        boolean flag = true;
+        for (String s : permissions) {
+            if (checkSelfPermission(s) != PackageManager.PERMISSION_GRANTED) {
+                flag = false;
+                break;
+            }
+        }
+
+        if (!flag) requestPermissions(permissions, REQUEST_PERMISSION);
     }
 }
