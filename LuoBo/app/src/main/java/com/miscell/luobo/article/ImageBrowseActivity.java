@@ -15,7 +15,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +33,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by jishichen on 2017/4/26.
  */
 public class ImageBrowseActivity extends BaseActivity implements ViewPager.OnPageChangeListener,
         Listener<byte[]>, ErrorListener {
+    private static final String TAG_PAGE = "page_%d";
     private ViewPager mViewPager;
     private RelativeLayout mToolBar;
 
@@ -92,6 +91,7 @@ public class ImageBrowseActivity extends BaseActivity implements ViewPager.OnPag
         mViewPager.setAdapter(new PhotoPagerAdapter());
         mViewPager.addOnPageChangeListener(this);
         mViewPager.setCurrentItem(mCurrentIndex);
+        mViewPager.setOffscreenPageLimit(5);
     }
 
     @Override
@@ -108,7 +108,13 @@ public class ImageBrowseActivity extends BaseActivity implements ViewPager.OnPag
         String imageUrl = mImageList.get(mCurrentIndex);
         if (TextUtils.isEmpty(imageUrl)) return;
 
-        NetworkRequest.getInstance().getBytes(imageUrl, this, this);
+        if (isGif(imageUrl)) {
+            String text = mInfos.get(imageUrl);
+            DBHelper.getInstance(this).insertGif(imageUrl, text);
+            Utils.showToast(this, R.string.gif_save_success);
+        } else {
+            NetworkRequest.getInstance().getBytes(imageUrl, this, this);
+        }
     }
 
     public void onShareButtonClicked(View v) {
@@ -145,16 +151,50 @@ public class ImageBrowseActivity extends BaseActivity implements ViewPager.OnPag
             }
         });
         animator.start();
+
+        titleAnimation(visible);
+    }
+
+    private void titleAnimation(final boolean visible) {
+        View view = mViewPager.findViewWithTag(String.format(TAG_PAGE, mCurrentIndex));
+        if (null == view) return;
+
+        final View titleView = view.findViewById(R.id.title_label);
+        int h = titleView.getHeight();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(titleView, View.TRANSLATION_Y,
+                visible ? 0 : -h, visible ? -h : 0);
+        animator.setDuration(250);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                if (!visible) titleView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (visible) titleView.setVisibility(View.GONE);
+            }
+        });
+        animator.start();
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
     public void onPageSelected(int position) {
         mCurrentIndex = position;
+
+        View view = mViewPager.findViewWithTag(String.format(TAG_PAGE, position + 1));
+        if (null == view) return;
+
+
+        View titleView = view.findViewById(R.id.title_label);
+        titleView.setVisibility(mToolBar.getVisibility() == View.VISIBLE
+                ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -221,6 +261,10 @@ public class ImageBrowseActivity extends BaseActivity implements ViewPager.OnPag
         return filePath;
     }
 
+    private boolean isGif(String url) {
+        return url.endsWith("gif") || url.endsWith("GIF") || url.endsWith("Gif");
+    }
+
     private class PhotoPagerAdapter extends PagerAdapter {
 
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -239,6 +283,7 @@ public class ImageBrowseActivity extends BaseActivity implements ViewPager.OnPag
         public Object instantiateItem(ViewGroup container, int position) {
             View view = LayoutInflater.from(ImageBrowseActivity.this)
                     .inflate(R.layout.photo_item, null);
+            view.setTag(String.format(TAG_PAGE, position));
 
             TextView textView = (TextView) view.findViewById(R.id.loading_text);
             TouchImageView imageView = (TouchImageView) view.findViewById(R.id.img_photo);
@@ -255,7 +300,7 @@ public class ImageBrowseActivity extends BaseActivity implements ViewPager.OnPag
                     titleView.setVisibility(View.GONE);
                 }
 
-                if (url.endsWith("gif") || url.endsWith("GIF") || url.endsWith("Gif")) {
+                if (isGif(url)) {
                     imageView.setVisibility(View.GONE);
                     gifView.setImageUrl(url, getResources().getDisplayMetrics().widthPixels);
                     gifView.setVisibility(View.VISIBLE);
@@ -273,7 +318,6 @@ public class ImageBrowseActivity extends BaseActivity implements ViewPager.OnPag
                 textView.setVisibility(View.VISIBLE);
                 titleView.setVisibility(View.GONE);
             }
-
             container.addView(view);
             return view;
         }

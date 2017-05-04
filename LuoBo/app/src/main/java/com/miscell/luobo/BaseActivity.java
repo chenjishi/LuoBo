@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -54,6 +55,18 @@ public class BaseActivity extends AppCompatActivity {
     protected void setContentView(int layoutResID, boolean hideTitle) {
         mHideTitle = hideTitle;
         setContentView(layoutResID);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        TextView textView = (TextView) findViewById(R.id.tv_title);
+        textView.setText(title);
+        textView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        setTitle(getString(titleId));
     }
 
     protected void onRightIconClicked() {

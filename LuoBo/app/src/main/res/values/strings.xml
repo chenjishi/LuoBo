@@ -13,6 +13,8 @@
     <string name="image_loading">图片加载&#8230;</string>
     <string name="image_save_fail">下载失败,请重试...</string>
     <string name="image_loading_fail">图片加载失败</string>
+    <string name="favorite_already">已收藏</string>
+    <string name="gif_save_success">已保存至GIF收藏</string>
     <array name="share_items">
         <item>微信好友</item>
         <item>朋友圈</item>

@@ -90,7 +90,13 @@ public class FeedListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         viewHolder.textView.setText(feed.title);
-        viewHolder.cateView.setText(feed.category);
+        if (!TextUtils.isEmpty(feed.category)) {
+            viewHolder.cateView.setText(feed.category);
+            viewHolder.cateView.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.cateView.setText(feed.category);
+            viewHolder.cateView.setVisibility(View.GONE);
+        }
         viewHolder.reviewsLabel.setText(feed.views);
         int count = feed.imageCount;
         if (count > 0) {

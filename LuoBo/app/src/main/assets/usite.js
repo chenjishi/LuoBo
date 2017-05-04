@@ -52,10 +52,3 @@ function loadData(){
 function init() {
     initImages();
 }
-
-function setArticle(p1, p2) {
-    document.getElementById('title').innerHTML = p1.title;
-    document.getElementById('content').innerHTML = p2.content;
-    initImages();
-}
-

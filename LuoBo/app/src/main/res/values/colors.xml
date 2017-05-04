@@ -10,4 +10,5 @@
     <color name="highlight">#DDD</color>
     <color name="background">#F0F0F0</color>
     <color name="gray_bg">#FF3B3B3B</color>
+    <color name="menu_highlight">#63B8FF</color>
 </resources>

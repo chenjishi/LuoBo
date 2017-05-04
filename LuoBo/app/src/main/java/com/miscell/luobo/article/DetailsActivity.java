@@ -1,8 +1,11 @@
 package com.miscell.luobo.article;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -16,12 +19,15 @@ import com.miscell.luobo.R;
 import com.miscell.luobo.comment.CommentActivity;
 import com.miscell.luobo.home.Feed;
 import com.miscell.luobo.utils.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.text.TextUtils.isEmpty;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.miscell.luobo.utils.Constants.EVENT_ARTICLE_SHARE;
 import static com.tencent.open.SocialConstants.PARAM_TITLE;
@@ -48,11 +54,12 @@ JSCallback, View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         mDatabase = DBHelper.getInstance(this);
-        generateButtons();
 
         Bundle args = getIntent().getExtras();
         mFeed = args.getParcelable("feed");
         String url = mFeed.url;
+        String cate = mFeed.category;
+        setTitle(!TextUtils.isEmpty(cate) ? cate : getString(R.string.app_name));
 
         findViewById(R.id.title_bar).setOnClickListener(this);
         mWebView = (WebView) findViewById(R.id.web_view);
@@ -61,6 +68,7 @@ JSCallback, View.OnClickListener {
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new JavaScriptBridge(this), "U148");
+        generateButtons();
 
         NetworkRequest.getInstance().getArticle(url, Article.class, this, this);
     }
@@ -97,11 +105,30 @@ JSCallback, View.OnClickListener {
     }
 
     @Override
+    public void onVideoClicked(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
+    }
+
+    @Override
     public void onThemeChange() {
 
     }
 
     private void renderPage(Article article) {
+        Document doc = Jsoup.parse(article.content);
+        if (null == doc) return;
+        Log.i("test", "#content " + article.content);
+
+        Elements embed = doc.select("embed");
+        handleVideos(embed);
+
+        Elements iframe = doc.select("iframe");
+        handleVideos(iframe);
+
+        article.content = doc.html();
+
         String template = Utils.readFromAssets(this, "usite.html");
         template = template.replace("{TITLE}", mFeed.title);
         template = template.replace("{U_AUTHOR}", mFeed.time);
@@ -109,6 +136,24 @@ JSCallback, View.OnClickListener {
         template = template.replace("{CONTENT}", article.content);
 
         mWebView.loadDataWithBaseURL(null, template, "text/html", "UTF-8", null);
+    }
+
+    private void handleVideos(Elements elements) {
+        if (null == elements || elements.size() == 0) return;
+
+        for (Element el : elements) {
+            String videoUrl = "http://www.u148.net/";
+            if (null != el.parent()) {
+                Element prev = el.parent().previousElementSibling();
+                if (null != prev) {
+                    Elements links = prev.select("a");
+                    if (null != links && links.size() > 0) {
+                        videoUrl = links.get(0).attr("href");
+                    }
+                }
+            }
+            el.parent().html("<img src=\"file:///android_asset/video.png\" title=\"" + videoUrl + "\" />");
+        }
     }
 
     @Override
@@ -127,12 +172,22 @@ JSCallback, View.OnClickListener {
                 startActivity(intent);
                 break;
             case TAG_FAVORITE:
-//                addToFavorite();
+                addToFavorite();
                 break;
             case TAG_SHARE:
                 share();
                 break;
         }
+    }
+
+    private void addToFavorite() {
+        if (mDatabase.isFavorite(mFeed.url)) {
+            Utils.showToast(this, R.string.favorite_already);
+            return;
+        }
+
+        mDatabase.insertFeed(mFeed);
+        generateButtons();
     }
 
     private void share() {
@@ -157,8 +212,7 @@ JSCallback, View.OnClickListener {
 
         int[] icons = {R.drawable.ic_social_share, R.drawable.ic_favorite,
                 R.drawable.ic_comment};
-        Feed feed = mDatabase.getFavoriteById("");
-        if (null != feed && !isEmpty(feed.url)) {
+        if (mDatabase.isFavorite(mFeed.url)) {
             icons[1] = R.drawable.ic_favorite_full;
         }
 

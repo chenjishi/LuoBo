@@ -86,7 +86,10 @@ public class NetworkRequest {
                     Elements header = el.select("header");
                     if (null != header && header.size() > 0) {
                         Element title = header.get(0);
-                        feed.category = title.select(".cat").get(0).text();
+                        Elements cates = title.select(".cat");
+                        if (null != cates && cates.size() > 0) {
+                            feed.category = cates.get(0).text();
+                        }
                         feed.title = title.select("h2 a").text();
                         String count = title.select(".text-muted").text();
                         if (!TextUtils.isEmpty(count)) {

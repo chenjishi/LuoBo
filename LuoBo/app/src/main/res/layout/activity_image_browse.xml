@@ -12,7 +12,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_gravity="bottom"
-                    android:background="#AA000000">
+                    android:background="#22000000">
         <ImageButton
                 style="@style/ImageButtonStyle"
                 android:onClick="onCloseButtonClicked"

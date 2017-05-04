@@ -3,13 +3,18 @@ package com.miscell.luobo.home;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.miscell.luobo.BaseActivity;
 import com.miscell.luobo.R;
 import com.miscell.luobo.utils.Constants;
@@ -31,11 +36,26 @@ public class MainActivity extends BaseActivity implements Listener<FeedDoc>, Err
 
     private SwipeRefreshLayout mRefreshLayout;
 
+    private LinearLayout mLeftView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkPermission();
         setContentView(R.layout.activity_main);
+        int color = getResources().getColor(R.color.colorPrimary);
+        findViewById(R.id.title_bar).setBackgroundColor(color);
+        setStatusViewColor(color);
+
+        mLeftView = (LinearLayout) findViewById(R.id.left_view);
+        mLeftView.setBackgroundResource(R.drawable.home_up_bkg);
+        mLeftView.setPadding(0, 0, 0, 0);
+        TextView titleText = (TextView) findViewById(R.id.tv_title);
+        titleText.setTextColor(Color.WHITE);
+        titleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18.f);
+        titleText.setTypeface(null);
+        ((ImageView) findViewById(R.id.ic_arrow)).setImageResource(
+                R.drawable.ic_navigation_drawer);
 
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         mRefreshLayout.setOnRefreshListener(this);

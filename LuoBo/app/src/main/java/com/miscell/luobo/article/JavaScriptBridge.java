@@ -27,4 +27,11 @@ public class JavaScriptBridge {
 
         mCallback.onImageClicked(url);
     }
+
+    @JavascriptInterface
+    public void onVideoClick(String url) {
+        if (null == mCallback) return;
+
+        mCallback.onVideoClicked(url);
+    }
 }

@@ -8,4 +8,6 @@ public interface JSCallback {
     void onImageClicked(String url);
 
     void onThemeChange();
+
+    void onVideoClicked(String url);
 }
