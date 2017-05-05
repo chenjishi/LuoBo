@@ -22,4 +22,9 @@
         <item>QQ空间</item>
         <item>QQ好友</item>
     </array>
+    <array name="menu_items">
+        <item>收藏</item>
+        <item>动态图</item>
+        <item>关于</item>
+    </array>
 </resources>

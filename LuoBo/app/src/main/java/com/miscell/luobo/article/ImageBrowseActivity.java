@@ -287,7 +287,7 @@ public class ImageBrowseActivity extends BaseActivity implements ViewPager.OnPag
 
             TextView textView = (TextView) view.findViewById(R.id.loading_text);
             TouchImageView imageView = (TouchImageView) view.findViewById(R.id.img_photo);
-            GifMovieView gifView = (GifMovieView) view.findViewById(R.id.gif_view);
+            GifMoveView gifView = (GifMoveView) view.findViewById(R.id.gif_view);
             TextView titleView = (TextView) view.findViewById(R.id.title_label);
 
             String url = mImageList.get(position);
@@ -302,7 +302,7 @@ public class ImageBrowseActivity extends BaseActivity implements ViewPager.OnPag
 
                 if (isGif(url)) {
                     imageView.setVisibility(View.GONE);
-                    gifView.setImageUrl(url, getResources().getDisplayMetrics().widthPixels);
+                    gifView.setImageUrl(url);
                     gifView.setVisibility(View.VISIBLE);
                     gifView.setOnClickListener(mOnClickListener);
                 } else {

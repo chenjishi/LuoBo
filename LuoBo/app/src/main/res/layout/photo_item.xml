@@ -11,7 +11,7 @@
             android:textColor="#666"
             android:textSize="15sp"
             android:layout_gravity="center"/>
-    <com.miscell.luobo.article.GifMovieView
+    <com.miscell.luobo.article.GifMoveView
             android:id="@+id/gif_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

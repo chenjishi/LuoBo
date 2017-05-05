@@ -6,6 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import com.miscell.luobo.home.Feed;
+import com.miscell.luobo.home.Gif;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jishichen on 2017/5/3.
@@ -71,6 +75,36 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public List<Feed> loadFavorites() {
+        List<Feed> list = null;
+        Cursor cursor = null;
+
+        String sql = "SELECT * FROM " + TB_NAME_FAVORITE;
+        try {
+            cursor = mDb.rawQuery(sql, null);
+            list = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                Feed feed = new Feed();
+                feed.category = cursor.getString(0);
+                feed.title = cursor.getString(1);
+                feed.imageCount = cursor.getInt(2);
+                feed.desc = cursor.getString(3);
+                feed.time = cursor.getString(4);
+                feed.views = cursor.getString(5);
+                feed.tag = cursor.getString(6);
+                feed.thumb = cursor.getString(7);
+                feed.url = cursor.getString(8);
+
+                list.add(feed);
+            }
+        } catch (Exception e) {
+        } finally {
+            if (null != cursor) cursor.close();
+        }
+
+        return list;
+    }
+
     public void insertFeed(Feed feed) {
         if (null == feed) return;
 
@@ -78,7 +112,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         mDb.execSQL(sql, new String[]{
                 feed.category,
-                feed.time,
+                feed.title,
                 feed.imageCount + "",
                 feed.desc,
                 feed.time,
@@ -86,6 +120,30 @@ public class DBHelper extends SQLiteOpenHelper {
                 feed.tag,
                 feed.thumb,
                 feed.url});
+    }
+
+    public List<Gif> loadGifList() {
+        List<Gif> list = null;
+        Cursor cursor = null;
+
+        String sql = "SELECT * FROM " + TB_NAME_GIF;
+        try {
+            cursor = mDb.rawQuery(sql, null);
+            list = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                Gif gif = new Gif();
+                gif.url = cursor.getString(0);
+                gif.desc = cursor.getString(1);
+                gif.time = cursor.getLong(2);
+
+                list.add(gif);
+            }
+        } catch (Exception e) {
+        } finally {
+            if (null != cursor) cursor.close();
+        }
+
+        return list;
     }
 
     public void insertGif(String url, String desc) {

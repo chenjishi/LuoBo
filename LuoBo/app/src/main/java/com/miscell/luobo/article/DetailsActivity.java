@@ -119,7 +119,6 @@ JSCallback, View.OnClickListener {
     private void renderPage(Article article) {
         Document doc = Jsoup.parse(article.content);
         if (null == doc) return;
-        Log.i("test", "#content " + article.content);
 
         Elements embed = doc.select("embed");
         handleVideos(embed);

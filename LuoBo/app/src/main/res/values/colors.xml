@@ -11,4 +11,5 @@
     <color name="background">#F0F0F0</color>
     <color name="gray_bg">#FF3B3B3B</color>
     <color name="menu_highlight">#63B8FF</color>
+    <drawable name="menu_item_pressed_color">#33272A2C</drawable>
 </resources>
