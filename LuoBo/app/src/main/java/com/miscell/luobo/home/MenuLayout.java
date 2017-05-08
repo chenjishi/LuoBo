@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.miscell.luobo.R;
 import com.miscell.luobo.utils.Utils;
 
+import java.util.List;
+
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -91,13 +93,16 @@ public class MenuLayout extends FrameLayout implements View.OnClickListener {
         switch (tag) {
             case TAG_FAVORITE:
                 intent.setClass(getContext(), FavoriteActivity.class);
+                getContext().startActivity(intent);
                 break;
             case TAG_GIF:
                 intent.setClass(getContext(), GifGridActivity.class);
+                getContext().startActivity(intent);
                 break;
             case TAG_ABOUT:
+                AboutDialog dialog = new AboutDialog(getContext());
+                dialog.show();
                 break;
         }
-        getContext().startActivity(intent);
     }
 }

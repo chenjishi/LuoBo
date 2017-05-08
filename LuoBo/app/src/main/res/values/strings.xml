@@ -15,6 +15,7 @@
     <string name="image_loading_fail">图片加载失败</string>
     <string name="favorite_already">已收藏</string>
     <string name="gif_save_success">已保存至GIF收藏</string>
+    <string name="network_disconnect">网络未连接，请检查网络设置</string>
     <array name="share_items">
         <item>微信好友</item>
         <item>朋友圈</item>

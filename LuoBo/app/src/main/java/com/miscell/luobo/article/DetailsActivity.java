@@ -70,11 +70,13 @@ JSCallback, View.OnClickListener {
         mWebView.addJavascriptInterface(new JavaScriptBridge(this), "U148");
         generateButtons();
 
+        showLoading();
         NetworkRequest.getInstance().getArticle(url, Article.class, this, this);
     }
 
     @Override
     public void onResponse(Article response) {
+        hideLoading();
         if (null == response) return;
 
         mArticle = response;
@@ -83,7 +85,7 @@ JSCallback, View.OnClickListener {
 
     @Override
     public void onErrorResponse() {
-
+        setError();
     }
 
     @Override

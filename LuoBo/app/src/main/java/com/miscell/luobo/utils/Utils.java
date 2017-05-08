@@ -1,7 +1,11 @@
 package com.miscell.luobo.utils;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,5 +83,35 @@ public class Utils {
 
     public static void showToast(Context ctx, int resId) {
         showToast(ctx, ctx.getString(resId));
+    }
+
+    public static boolean isNetworkConnected(Context context) {
+        if (context == null) {
+            return false;
+        }
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (null != cm) {
+            NetworkInfo info = cm.getActiveNetworkInfo();
+            if (null != info) {
+                return info.isConnected();
+            }
+        }
+
+        return false;
+    }
+
+    public static String getVersionName(Context context) {
+        String versionName = "";
+        Context appContext = context.getApplicationContext();
+
+        try {
+            PackageManager pm = appContext.getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(appContext.getPackageName(), 0);
+            versionName = pi.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return versionName;
     }
 }

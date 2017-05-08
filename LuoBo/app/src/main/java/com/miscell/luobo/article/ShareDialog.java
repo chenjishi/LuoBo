@@ -158,14 +158,14 @@ public class ShareDialog extends Dialog implements View.OnClickListener, WbShare
             return;
         }
 
-        if (!mWXAPI.isWXAppSupportAPI()) {
-            Utils.showToast(getContext(), R.string.wechat_not_support);
-            return;
-        }
-
-        if (type == SHARE_TO_FRIENDS && mWXAPI.getWXAppSupportAPI() < TIMELINE_SUPPORTED_VERSION) {
-            Utils.showToast(getContext(), R.string.wechat_timeline_not_support);
-        }
+//        if (!mWXAPI.isWXAppSupportAPI()) {
+//            Utils.showToast(getContext(), R.string.wechat_not_support);
+//            return;
+//        }
+//
+//        if (type == SHARE_TO_FRIENDS && mWXAPI.getWXAppSupportAPI() < TIMELINE_SUPPORTED_VERSION) {
+//            Utils.showToast(getContext(), R.string.wechat_timeline_not_support);
+//        }
 
         String url = mImageList.get(0);
         NetworkRequest.getInstance().getBytes(url, this, this);

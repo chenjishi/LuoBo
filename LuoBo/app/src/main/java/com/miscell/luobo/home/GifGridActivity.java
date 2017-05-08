@@ -1,19 +1,20 @@
 package com.miscell.luobo.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 import com.miscell.luobo.BaseActivity;
 import com.miscell.luobo.R;
-import com.miscell.luobo.article.GifMoveView;
+import com.miscell.luobo.article.ImageBrowseActivity;
 import com.miscell.luobo.utils.DBHelper;
 
 import java.util.ArrayList;
@@ -36,7 +37,15 @@ public class GifGridActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             if (MSG_LOAD != msg.what) return;
 
-            mGridAdapter.notifyDataSetChanged();
+            ArrayList<String> imageList = new ArrayList<>();
+            for (Gif gif : mGifList) {
+                imageList.add(gif.url);
+            }
+
+            Intent intent = new Intent(GifGridActivity.this, ImageBrowseActivity.class);
+            intent.putExtra("imgsrc", imageList.get(0));
+            intent.putStringArrayListExtra("images", imageList);
+            startActivity(intent);
         }
     };
 
@@ -64,9 +73,6 @@ public class GifGridActivity extends BaseActivity {
                 if (null != list && list.size() > 0) {
                     mGifList.clear();
                     mGifList.addAll(list);
-                    for (Gif gif : list) {
-                        Log.i("test", "#gif " + gif.url);
-                    }
                 }
                 mHandler.sendEmptyMessage(MSG_LOAD);
             }
@@ -86,7 +92,7 @@ public class GifGridActivity extends BaseActivity {
         public void onBindViewHolder(GifViewHolder holder, int position) {
             Gif gif = mGifList.get(position);
 
-            holder.gifView.setImageUrl(gif.url);
+            Glide.with(GifGridActivity.this).load(gif.url).into(holder.gifView);
         }
 
         @Override
@@ -97,11 +103,11 @@ public class GifGridActivity extends BaseActivity {
 
     private static class GifViewHolder extends RecyclerView.ViewHolder {
 
-        public GifMoveView gifView;
+        public ImageView gifView;
 
         public GifViewHolder(View itemView) {
             super(itemView);
-            gifView = (GifMoveView) itemView.findViewById(R.id.gif_view);
+            gifView = (ImageView) itemView.findViewById(R.id.image_view);
         }
     }
 }

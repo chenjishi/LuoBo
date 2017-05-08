@@ -6,13 +6,11 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
+import com.miscell.luobo.utils.LoadingView;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -24,6 +22,8 @@ public class BaseActivity extends AppCompatActivity {
     protected int mTitleResId = -1;
 
     protected FrameLayout mRootView;
+
+    private LoadingView mLoadingView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,6 +87,34 @@ public class BaseActivity extends AppCompatActivity {
 
     public void onBackClicked(View v) {
         finish();
+    }
+
+    protected void showLoading() {
+        if (null != mLoadingView && null != mLoadingView.getParent()) {
+            ((ViewGroup) mLoadingView.getParent()).removeView(mLoadingView);
+        } else {
+            mLoadingView = new LoadingView(this);
+        }
+
+        mLoadingView.showLoading();
+        mRootView.addView(mLoadingView, new FrameLayout.LayoutParams(MATCH_PARENT,
+                MATCH_PARENT));
+    }
+
+    protected void hideLoading() {
+        if (null != mLoadingView) {
+            mRootView.removeView(mLoadingView);
+        }
+    }
+
+    protected void setError() {
+        setError(getString(R.string.network_disconnect));
+    }
+
+    protected void setError(String text) {
+        if (null != mLoadingView) {
+            mLoadingView.setError(text);
+        }
     }
 
     protected void setStatusViewColor(@ColorInt int color) {

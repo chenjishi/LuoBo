@@ -7,10 +7,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,7 +27,7 @@ import com.miscell.luobo.utils.NetworkRequest;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements Listener<FeedDoc>, ErrorListener,
-        OnPageEndListener, SwipeRefreshLayout.OnRefreshListener {
+        OnPageEndListener, SwipeRefreshLayout.OnRefreshListener, DrawerLayout.DrawerListener {
     private static final int REQUEST_PERMISSION = 233;
 
     private FeedListAdapter mListAdapter;
@@ -37,6 +39,8 @@ public class MainActivity extends BaseActivity implements Listener<FeedDoc>, Err
     private SwipeRefreshLayout mRefreshLayout;
 
     private LinearLayout mLeftView;
+
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,9 @@ public class MainActivity extends BaseActivity implements Listener<FeedDoc>, Err
         titleText.setTypeface(null);
         ((ImageView) findViewById(R.id.ic_arrow)).setImageResource(
                 R.drawable.ic_navigation_drawer);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.addDrawerListener(this);
 
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         mRefreshLayout.setOnRefreshListener(this);
@@ -89,6 +96,7 @@ public class MainActivity extends BaseActivity implements Listener<FeedDoc>, Err
         });
         recyclerView.addOnScrollListener(mScrollListener);
 
+        showLoading();
         request();
     }
 
@@ -98,6 +106,36 @@ public class MainActivity extends BaseActivity implements Listener<FeedDoc>, Err
         String url = String.format(Constants.FEED_URL, mPage);
         NetworkRequest.getInstance().getFeedList(url, FeedDoc.class,
                 this, this);
+    }
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+        int indent = (int) (slideOffset * dp2px(8));
+        mLeftView.setPadding(-indent, 0, dp2px(8), 0);
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
+    }
+
+    @Override
+    public void onBackClicked(View v) {
+        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+        } else {
+            mDrawerLayout.openDrawer(Gravity.LEFT);
+        }
     }
 
     @Override
@@ -116,6 +154,7 @@ public class MainActivity extends BaseActivity implements Listener<FeedDoc>, Err
 
     @Override
     public void onResponse(FeedDoc response) {
+        hideLoading();
         onRequestEnd();
         if (null == response) return;
 
@@ -128,6 +167,7 @@ public class MainActivity extends BaseActivity implements Listener<FeedDoc>, Err
 
     @Override
     public void onErrorResponse() {
+        setError();
         onRequestEnd();
     }
 
@@ -153,5 +193,13 @@ public class MainActivity extends BaseActivity implements Listener<FeedDoc>, Err
         }
 
         if (!flag) requestPermissions(permissions, REQUEST_PERMISSION);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != mDrawerLayout) {
+            mDrawerLayout.removeDrawerListener(this);
+        }
     }
 }
