@@ -16,6 +16,7 @@ import com.miscell.luobo.BaseActivity;
 import com.miscell.luobo.R;
 import com.miscell.luobo.article.ImageBrowseActivity;
 import com.miscell.luobo.utils.DBHelper;
+import com.miscell.luobo.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,10 @@ public class GifGridActivity extends BaseActivity {
             ArrayList<String> imageList = new ArrayList<>();
             for (Gif gif : mGifList) {
                 imageList.add(gif.url);
+            }
+            if (imageList.size() == 0) {
+                Utils.showToast(GifGridActivity.this, R.string.no_gif_record);
+                return;
             }
 
             Intent intent = new Intent(GifGridActivity.this, ImageBrowseActivity.class);

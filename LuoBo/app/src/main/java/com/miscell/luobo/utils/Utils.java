@@ -100,18 +100,25 @@ public class Utils {
         return false;
     }
 
-    public static String getVersionName(Context context) {
-        String versionName = "";
-        Context appContext = context.getApplicationContext();
+    private static PackageInfo getPackageInfo(Context context) {
+        PackageInfo pi = null;
 
         try {
-            PackageManager pm = appContext.getPackageManager();
-            PackageInfo pi = pm.getPackageInfo(appContext.getPackageName(), 0);
-            versionName = pi.versionName;
+            PackageManager pm = context.getPackageManager();
+            pi = pm.getPackageInfo(context.getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
         }
 
-        return versionName;
+        return pi;
+    }
+
+    public static String getVersionName(Context context) {
+        PackageInfo pi = getPackageInfo(context);
+        return null != pi ? pi.versionName : "";
+    }
+
+    public static int getVersionCode(Context context) {
+        PackageInfo pi = getPackageInfo(context);
+        return null != pi ? pi.versionCode : 0;
     }
 }
