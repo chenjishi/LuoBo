@@ -19,9 +19,9 @@ android {
     signingConfigs {
         release {
             storeFile file("../chenjishi.keystore")
-            storePassword "331500311113Ctrl"
-            keyAlias "chenjishi_key"
-            keyPassword "331500311113Ctrl"
+            storePassword "**************"
+            keyAlias "**************"
+            keyPassword "**************"
         }
     }
     buildTypes {
@@ -29,12 +29,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-//            applicationVariants.all {variant ->
-//                variant.outputs.each {output ->
-//                    def timestamp = new Date().format('yyyyMMddHHmmss')
-//                    output.outputFile = new File(output.outputFile.parent, "luobo-" + gitVersion() + "-" + timestamp + ".apk")
-//                }
-//            }
+            applicationVariants.all {variant ->
+                variant.outputs.each {output ->
+                    def timestamp = new Date().format('yyyyMMddHHmmss')
+                    output.outputFile = new File(output.outputFile.parent, "luobo-" + gitVersion() + "-" + timestamp + ".apk")
+                }
+            }
         }
     }
 }
