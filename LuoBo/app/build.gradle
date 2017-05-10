@@ -9,7 +9,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.miscell.luobo"
+        applicationId "com.chenjishi.read"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode gitVersion()
@@ -19,9 +19,9 @@ android {
     signingConfigs {
         release {
             storeFile file("../chenjishi.keystore")
-            storePassword "**************"
-            keyAlias "**************"
-            keyPassword "**************"
+            storePassword "331500311113Ctrl"
+            keyAlias "chenjishi_key"
+            keyPassword "331500311113Ctrl"
         }
     }
     buildTypes {

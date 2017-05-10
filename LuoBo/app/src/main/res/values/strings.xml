@@ -22,6 +22,9 @@
     <string name="updating_app">正在更新应用程序&#8230;</string>
     <string name="website_info">一个有趣的网站!</string>
     <string name="no_gif_record">没有GIF收藏记录</string>
+    <string name="phone_info">有意思吧意见反馈(版本：%1$s 机型：%2$s 系统：%3$s)</string>
+    <string name="email_choose">选择邮箱</string>
+    <string name="feedback">意见反馈</string>
     <array name="share_items">
         <item>微信好友</item>
         <item>朋友圈</item>

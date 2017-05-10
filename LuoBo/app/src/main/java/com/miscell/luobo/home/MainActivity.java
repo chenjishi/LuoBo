@@ -142,7 +142,6 @@ public class MainActivity extends BaseActivity implements Listener<FeedDoc>, Err
 
         GlideBuilder glideBuilder = new GlideBuilder(this);
         String dirPath = FileUtils.getImageCacheDir(this);
-        Log.i("test", "#dir path " + dirPath);
         glideBuilder.setDiskCache(new ExternalCacheDiskCacheFactory(this,
                 dirPath, 100 * 1024 * 1024));
     }
