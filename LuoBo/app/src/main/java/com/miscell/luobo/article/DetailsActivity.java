@@ -128,6 +128,14 @@ JSCallback, View.OnClickListener {
         Elements iframe = doc.select("iframe");
         handleVideos(iframe);
 
+        Elements els = doc.select("p");
+        for (Element el : els) {
+            String text = el.text();
+            if (!TextUtils.isEmpty(text) && text.contains(getString(R.string.no_repost))) {
+                el.html("");
+            }
+        }
+
         article.content = doc.html();
 
         String template = Utils.readFromAssets(this, "usite.html");

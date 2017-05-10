@@ -25,6 +25,7 @@
     <string name="phone_info">有意思吧意见反馈(版本：%1$s 机型：%2$s 系统：%3$s)</string>
     <string name="email_choose">选择邮箱</string>
     <string name="feedback">意见反馈</string>
+    <string name="no_repost">未经允许不得转载</string>
     <array name="share_items">
         <item>微信好友</item>
         <item>朋友圈</item>
