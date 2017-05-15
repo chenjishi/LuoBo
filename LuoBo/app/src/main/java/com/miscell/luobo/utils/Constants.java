@@ -13,4 +13,6 @@ public interface Constants {
 
     String EVENT_ARTICLE_SHARE = "ArticleShare";
 
+    String BLOG_IMAGE = "https://ww1.sinaimg.cn/large/695d00bbgw1ecriw9ujfoj20g90au75g.gif";
+
 }

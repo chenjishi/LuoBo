@@ -177,7 +177,9 @@ public class NetworkRequest {
                                 }
                             }
                         }
-                        article.imageList.add(url);
+                        if (!url.equals(Constants.BLOG_IMAGE)) {
+                            article.imageList.add(url);
+                        }
                     }
                 }
 

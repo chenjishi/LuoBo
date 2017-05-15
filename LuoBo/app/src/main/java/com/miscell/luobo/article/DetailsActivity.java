@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.text.TextUtils.isEmpty;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.miscell.luobo.utils.Constants.EVENT_ARTICLE_SHARE;
 import static com.tencent.open.SocialConstants.PARAM_TITLE;
@@ -59,7 +60,7 @@ JSCallback, View.OnClickListener {
         mFeed = args.getParcelable("feed");
         String url = mFeed.url;
         String cate = mFeed.category;
-        setTitle(!TextUtils.isEmpty(cate) ? cate : getString(R.string.app_name));
+        setTitle(!isEmpty(cate) ? cate : getString(R.string.app_name));
 
         findViewById(R.id.title_bar).setOnClickListener(this);
         mWebView = (WebView) findViewById(R.id.web_view);
@@ -131,7 +132,9 @@ JSCallback, View.OnClickListener {
         Elements els = doc.select("p");
         for (Element el : els) {
             String text = el.text();
-            if (!TextUtils.isEmpty(text) && text.contains(getString(R.string.no_repost))) {
+            if (!isEmpty(text)) {
+                if (text.contains(getString(R.string.no_repost)) ||
+                        text.contains(getString(R.string.keep_post)))
                 el.html("");
             }
         }

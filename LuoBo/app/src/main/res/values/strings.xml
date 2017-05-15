@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">茶余饭后</string>
+    <string name="app_name">博海拾贝</string>
     <string name="loading">载入中&#8230;</string>
     <string name="wechat_not_install">您还没有安装微信，无法使用微信分享</string>
     <string name="wechat_not_support">您的微信版本过低，不支持该分享功能</string>
@@ -26,6 +26,7 @@
     <string name="email_choose">选择邮箱</string>
     <string name="feedback">意见反馈</string>
     <string name="no_repost">未经允许不得转载</string>
+    <string name="keep_post">博海拾贝出品，每日轻拾一贝，做贴不易，转载请保留此条</string>
     <array name="share_items">
         <item>微信好友</item>
         <item>朋友圈</item>
